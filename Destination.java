@@ -1,12 +1,13 @@
-import java.util.ArrayList;
+import java.util.*;
+import java.io.*;
 
 public class Destination {
     String location;
-    ArrayList<Integer> routes;
+    ArrayList<String> routes;
 
-    public Destination(String _location, ArrayList<Integer> _routes){
+    public Destination(String _location, ArrayList<String> _routes){
         location = _location;
-        routes = new ArrayList<Integer>(_routes);
+        routes = new ArrayList<String>(_routes);
 
     }
 
