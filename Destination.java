@@ -11,4 +11,31 @@ public class Destination {
 
     }
 
+    public String toString(){
+        String output = "";
+        output += "Destination: " + location + "\n";
+        for (String r : routes){
+            output += "Bus number: " + r + "\n";
+
+        }
+        return output;
+    }
+
+    public boolean validRoute(String route){
+        for (String r : routes){
+            if (r.toString().equals(route.toString())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public String getName(){
+        return location;
+    }
+
+    // public boolean notAvailable(){
+    //     return location.equals("") | routes.length() == 0;
+
+    // }
 }
