@@ -79,7 +79,7 @@ public class PageScanner {
         if (route.contains("*")){
             route = route.substring(0, route.indexOf("*")) + "\\*";
         }
-        String routeLink = "<a href=\"(.*)\">" + route + "</a>";
+        String routeLink = "<a href=\"(.*\\d{3})\"(.*)?>" + route + "</a>";
 
         Pattern pRouteLink = Pattern.compile(routeLink);
         Matcher mRouteLink = pRouteLink.matcher(pageText);
