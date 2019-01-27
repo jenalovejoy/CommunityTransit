@@ -1,3 +1,7 @@
+// Programming Languages - Assignment 1
+// Jena Lovejoy
+// CommunityTransit interacts with the information given by PageScanner and facilitates the interaction between that data and the user
+
 import java.util.*;
 import java.io.*;
 
@@ -9,34 +13,37 @@ public class CommunityTransit {
         landingPageScan = new PageScanner(input);
     }
 
+    // Manages user input and directs the flow of interactions
     public void start() throws Exception {
-        buffer(15);
+        buffer(24);
         System.out.println("Welcome to CommunityTransit!");
-        System.out.println("Located at \"https://www.communitytransit.org/busservice/schedules/\"\n");
-
+        System.out.println("Located at \"https://www.communitytransit.org/busservice/schedules/\"");
+        buffer(24);
         String destinationLetter = getDestinationLetter();
         
         while (!destinationLetter.equals("!")){ 
+            // Tracks destinations beginning with a chosen letter
             ArrayList<Destination> destinations = displayDestinations(destinationLetter);
             
+            // If those destinations exist, accept further input
             if (destinations.size() != 0){
                 String routeNumber = getRouteNumber(destinations); 
                 while (!routeNumber.equals("!")){
-                    String routeLink = displayRouteInformation(routeNumber);
+                    displayRouteInformation(routeNumber);
                     routeNumber = getRouteNumber(destinations); 
                 }
             } else {
-                System.out.println("No destinations starting with " + destinationLetter + " exist");
+                System.out.println("No destinations starting with " + destinationLetter + " are available.");
             }
             destinationLetter = getDestinationLetter();
-            System.out.println("\n");
-            buffer(15);
+            buffer(24);
         }
 
-        System.out.println("Thank you for using CommunityTransit! Goodbye\n");
-        buffer(15);
+        System.out.print("Thank you for using CommunityTransit! Goodbye\n");
+        buffer(24);
     }
     
+    // Obtains a valid input for finding the desired destinations 
     public String getDestinationLetter(){
         boolean valid = false;
         Scanner scanner = new Scanner(System.in);
@@ -44,7 +51,7 @@ public class CommunityTransit {
         String output = "";
 
         while (!valid){
-            System.out.print("Please enter a letter that your destinations start with, or \"!\" to quit: ");
+            System.out.print("Please enter a letter that your destination starts with, or \"!\" to quit: ");
             
             input = scanner.nextLine();
             int value = (int) input.charAt(0);
@@ -56,13 +63,13 @@ public class CommunityTransit {
                 output = input.toLowerCase();
                 valid = true;
             } else {
-                System.out.println("Input invalid, please try again");
+                System.out.println("Input invalid, please enter a letter");
             }
-
         }
         return output;
     }
 
+    // Obtains a valid input for finding the desired route 
     public String getRouteNumber(ArrayList<Destination> destinations){
 
         boolean valid = false;
@@ -71,7 +78,7 @@ public class CommunityTransit {
         Scanner scanner = new Scanner(System.in);
 
         while (!valid){
-            buffer(15);
+            buffer(24);
             System.out.print("Please enter an available route number, or \"!\" to go back: ");
 
             input = scanner.nextLine();
@@ -87,6 +94,7 @@ public class CommunityTransit {
         return input;
     }
 
+    // Verifies if the input is an available route
     public boolean isValidRoute(String input, ArrayList<Destination> destinations){
         for (Destination d : destinations){
             if (d.validRoute(input)){
@@ -96,65 +104,53 @@ public class CommunityTransit {
         return false; 
     }
 
+    // Prints all destinations available
     public ArrayList<Destination> displayDestinations(String c){
         ArrayList<Destination> destinations = landingPageScan.findDestinations(c);
 
         for (Destination d : destinations){
-            buffer(15);
-            System.out.println(d);
+            buffer(24);
+            System.out.print(d);
 
         }
         return destinations;
     }
 
+    // Finds and prints all stop and week information for a givene route
     public String displayRouteInformation(String route) throws Exception {
-        
-        // String routeLink = "";
-        // PageScanner routePage;
-        // try {
-        //     String smallRouteLink = landingPageScan.getRouteLink(route);
-        //     routeLink = "https://www.communitytransit.org/busservice" +  smallRouteLink;
-        //     routePage = new PageScanner(routeLink);
-        // } catch (Exception e){
-        //     System.out.println("We're sorry, that page is no longer available");
-        // }
-        // System.out.println("the link to your route is: " +  routeLink);
-        
+
         String smallRouteLink = landingPageScan.getRouteLink(route);
         String routeLink = "https://www.communitytransit.org/busservice" +  smallRouteLink;
 
         System.out.println("the link to your route is: " +  routeLink);
+        System.out.println("     routes loading . . .");
+        buffer(24);
         
+        // Extracts the information for the given webpage
         PageScanner routePage = new PageScanner(routeLink);
+        ArrayList<String> routeInformation = routePage.getRouteInformation();
 
-        routePage.getRouteInformation();
-
-        System.out.println("Destination: ");
-
+        // Examines given information and formats accordingly
+        for (String s : routeInformation){
+            if (s.contains("destination")){
+                System.out.println(s);
+            } else if (s.contains("+")){
+                buffer(24);
+            } else {
+                System.out.println(s);
+            }
+        }
         return routeLink;
     }
 
+    // Adds a stylized line between outputs
     public void buffer(int w){
+        System.out.println();
+
         for(int i = 0; i <= w; i++){
             System.out.print("+ ");
         }
         System.out.println();
         System.out.println();
     }
-
-    // public String adjustRoute(String route){
-    //     if (route.contains(" ")){
-    //         route = route.substring(0, route.indexOf(" ") - 1);
-    //     }
-    //     if (route.contains("/")){
-    //         int index = route.indexOf("/");
-    //         String first = route.substring(0, index);
-    //         String second = route.substring(index + 1);
-    //         route = first + "-" + second;
-    //         System.out.println(route);
-    //     }
-
-    //     return route;
-
-    // }
 }

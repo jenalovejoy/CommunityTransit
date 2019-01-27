@@ -1,3 +1,7 @@
+// Programming Languages - Assignment 1
+// Jena Lovejoy
+// Destination represents an individual location and all associated routes
+
 import java.util.*;
 import java.io.*;
 
@@ -6,9 +10,15 @@ public class Destination {
     ArrayList<String> routes;
 
     public Destination(String _location, ArrayList<String> _routes){
-        location = _location;
-        routes = new ArrayList<String>(_routes);
 
+        if (_location.contains("-")){
+            int index = _location.indexOf("-");
+            location = _location.substring(0,index) + " " + _location.substring(index + 1, index + 2).toUpperCase() + _location.substring(index+2);
+        } else {
+            location = _location;
+        }
+
+        routes = new ArrayList<String>(_routes);
     }
 
     public String toString(){
@@ -21,6 +31,7 @@ public class Destination {
         return output;
     }
 
+    // Verifies if a particular route goes to/from this destination
     public boolean validRoute(String route){
         for (String r : routes){
             if (r.toString().equals(route.toString())){
@@ -29,13 +40,4 @@ public class Destination {
         }
         return false;
     }
-
-    public String getName(){
-        return location;
-    }
-
-    // public boolean notAvailable(){
-    //     return location.equals("") | routes.length() == 0;
-
-    // }
 }
